@@ -16,7 +16,29 @@ def count_power_groups(stations, lines):
     # TODO Step 6: Implement a graph traversal (DFS or BFS) to explore groups.
     # TODO Step 7: Test on small graphs (1 node, chain, completely separate nodes).
     # TODO Step 8: Check that your solution is roughly O(n + m).
-    pass
+    visited = set()
+    station_set = set(stations)
+    graph = {s: set() for s in stations}
+    for a, b in lines:
+        if a in station_set and b in station_set:
+            graph[a].add(b)
+            graph[b].add(a)
+    def dfs(start):
+        stack = [start]
+        while stack:
+            node = stack.pop()
+            if node in visited:
+                continue
+            visited.add(node)
+            for nei in graph.get(node, ()):    
+                if nei not in visited:
+                    stack.append(nei)
+    count = 0
+    for s in stations:
+        if s not in visited:
+            dfs(s)
+            count += 1
+    return count
 
 
 if __name__ == "__main__":
